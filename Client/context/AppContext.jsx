@@ -32,7 +32,7 @@ export const AppProvider = ({children}) => {
             settoken(token);
             axios.defaults.headers.common["Authorization"] = token;
         }
-    }, []);
+    }, [blogs]);
 
     const value = {
         axios,navigate,token,settoken,blogs,setblogs,input,setinput
