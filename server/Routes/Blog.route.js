@@ -7,6 +7,7 @@ import {
     getBlogById,
     getBlogComments,
     toggolePublish,
+    generateContent
 } from "../Controllers/Blog.controller.js";
 import upload from "../Middleware/Multer.middleware.js"
 import auth from "../Middleware/Auth.middleware.js";
@@ -20,5 +21,6 @@ blogRouter.post("/delete" , auth , deleteBlogById);
 blogRouter.post("/toggole-publish" , auth , toggolePublish);
 blogRouter.post("/add-comment" , addComment);
 blogRouter.post("/comments", getBlogComments);
+blogRouter.post("/generate", auth , generateContent);
 
 export default blogRouter;
