@@ -5,11 +5,13 @@ import {Comment} from "../Models/Comment.model.js"
 const adminLogin = async (req , res) => {
     try {
         const {email , password} = req.body;
+        console.log(req.body);
         if(email !== process.env.ADMIN_EMAIL || password !== process.env.ADMIN_PASSWORD){
             return res.json({success:false , message:"Invalid Credentials"});
         }
         const token = jwt.sign({email} , process.env.JWT_SECRET);
-        res.success.json({success:true , token , message:"Admin Login successful"});
+        console.log(token);
+        res.json({success:true , token , message:"Admin Login successful"});
     } catch (error) {
         res.json({success:false , message:error.message})
     }

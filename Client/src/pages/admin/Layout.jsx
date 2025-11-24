@@ -2,9 +2,16 @@ import React  from 'react'
 import {assets} from "../../assets/assets.js"
 import { Outlet, useNavigate } from 'react-router-dom'
 import Sidebar from '../../components/admin/Sidebar.jsx';
+import {useAppContext} from '../../../context/AppContext.jsx'
+
+
 const Layout = () => {
-  const navigate = useNavigate();
+
+  const {settoken,navigate} = useAppContext();
+
   const logout = ()=>{
+    localStorage.removeItem("Blog_token");
+    settoken(null);
     navigate("/");
   }
   return (

@@ -1,12 +1,31 @@
 import React, { useState } from 'react'
+import { useAppContext } from '../../../context/AppContext';
+import toast from 'react-hot-toast';
 
 function Login() {
+
+  const {axios , settoken} = useAppContext();
 
   const [email , setemail] = useState('');
   const [password , setpassword] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    try {
+      const {data} = await axios.post('/api/admin/login',{
+        email,
+        password
+      });
+      if(data.success) {
+        settoken(data.token);
+        localStorage.setItem("Blog_token", data.token);
+        axios.defaults.headers.common["Authorization"] = data.token;
+      }else{
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error("Login failed");
+    }
   }
   return (
     <div className=' flex items-center justify-center h-screen '>
@@ -23,7 +42,7 @@ function Login() {
             <div className='flex flex-col'>
               <label htmlFor="email">Email</label>
               <input onChange={(e)=>{setemail(e.target.value)}} 
-              value={email} type="email" id="email" name="email" required placeholder='your email id' className='border-b-2 border-gray-300
+              value={email} type="email" id="email" name="email" required autoComplete='additional-name' placeholder='your email id' className='border-b-2 border-gray-300
                p-2 outline-none mb-6' />
             </div>
 

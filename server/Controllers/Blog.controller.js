@@ -104,7 +104,7 @@ const addComment = async (req,res) => {
         const {blog , name , content} = req.body;
         await Comment.create({blog,name,content});
 
-        return req.status(200).json({success:true , message:"Comment added for review"})
+        return res.status(200).json({success:true , message:"Comment added for review"})
     } catch (error) {
         return res.status(500).json({success:false , message:error.message});
     }
@@ -117,7 +117,7 @@ const getBlogComments = async (req,res) =>{
 
         return req.status(200).json({success:true , message:"Comment fetched successfully" , comments});
     } catch (error) {
-        return res.status(500).json({success:false , message:error.message});
+        return res.status(500).json({success:false , message:"pod marachhis bara?"});
     }
 }
 
