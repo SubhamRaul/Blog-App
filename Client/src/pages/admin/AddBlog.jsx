@@ -10,7 +10,7 @@ function AddBlog() {
   const editorRef = useRef(null);
   const quillref = useRef(null);
 
-  const {axios} = useAppContext();
+  const {axios, fetchBlogs} = useAppContext();
   const [isAdding , setisAdding] = useState(false);
 
   const [image , setImage] = useState(null);
@@ -48,6 +48,7 @@ function AddBlog() {
         setCategory("Startup");
         setIsPublished(false);
         quillref.current.root.innerHTML = "";
+        await fetchBlogs();
       }else{
         toast.error("Failed to add blog");
       }

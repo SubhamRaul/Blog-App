@@ -42,7 +42,7 @@ function ListBlogs() {
           </thead>
           <tbody>
             {blogs.map((blog,index)=>{
-              return <BlogTableItem key={blog.id} blog={blog} index={index} fetchBlogs={fetchBlogs} />
+              return <BlogTableItem key={blog._id} blog={blog} index={index} fetchBlogs={fetchBlogs} />
             })}
           </tbody>
         </table>
