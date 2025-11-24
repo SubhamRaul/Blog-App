@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { assets, dashboard_data } from '../../assets/assets'
 import BlogTableItem from '../../components/admin/BlogTableItem'
+import toast from 'react-hot-toast'
+import { useAppContext } from '../../../context/AppContext'
 
 const Dashboard = () => {
 
@@ -11,8 +13,17 @@ const Dashboard = () => {
     recentBlogs:[]
   })
 
+   const {axios} = useAppContext();
+
+
    const fetchDashboardData = async () => {
-    setdashboardData(dashboard_data)
+    try {
+      const {data} = await axios.get("/api/admin/dashboard");
+      data.success ? setdashboardData(data.dashBoardData) : toast.error("fetching data unsuccessfull")
+
+    } catch (error) {
+      toast.error(error.message);
+    }
    }
 
    useEffect(()=>{

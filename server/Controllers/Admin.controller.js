@@ -20,7 +20,7 @@ const adminLogin = async (req , res) => {
 const getAllBlogsAdmin = async (req,res) => {
     try {
         const allBlogs = await Blog.find({}).sort({createdAt:-1});
-        return res.success.json({success:true , allBlogs , message:"All blog fetching is successful"});
+        return res.json({success:true , allBlogs , message:"All blog fetching is successful"});
     } catch (error) {
         return res.status(500).json({success:false , message:error.message})
     }
@@ -28,14 +28,14 @@ const getAllBlogsAdmin = async (req,res) => {
 
 const getAllComments = async (req,res) => {
     try {
-        const Comments = await Comment.find({}).populate("Blog").toSorted({createdAt:-1});
-        return res.status(200).json({success:true , Comments , message:"All comment fetching is successful"})
+        const comments = await Comment.find({}).populate("blog").sort({ createdAt: -1 });
+        return res.status(200).json({ success: true, comments, message: "All comments fetched successfully" });
     } catch (error) {
         return res.status(500).json({success:false , message:error.message})        
     }
 }
 
-const getDashBoard = async () =>{
+const getDashBoard = async (req,res) =>{
     try {
         const recentBlogs = await Blog.find({}).sort({createdAt:-1}).limit(5);
         const blogs = await Blog.countDocuments();
@@ -73,7 +73,7 @@ const ApproveCommentById = async (req,res) => {
         comment.isApproved = true;
         await comment.save();
         
-        return res.status(200).json({success:true , message:"comment deleted successfully"})
+        return res.status(200).json({success:true , message:"comment approved successfully"})
     } catch (error) {
         return res.status(500).json({success:false , message:error.message});
     }

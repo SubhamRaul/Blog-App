@@ -91,7 +91,7 @@ const toggolePublish = async (req,res)=>{
         const blog = await Blog.findById(id);
         blog.isPublished = !blog.isPublished;
         await blog.save();
-        return res.status(500).json({success:false , message:"Blog updated Succcessfully."});
+        return res.status(200).json({success:true , message:"Blog updated Succcessfully."});
     } catch (error) {
         return res.status(500).json({success:false , message:error.message});    
     }
@@ -115,7 +115,7 @@ const getBlogComments = async (req,res) =>{
         const {blogId} = req.body;
         const comments = await Comment.find({blog:blogId , isApproved:true}).sort({createdAt:-1});
 
-        return req.status(200).json({success:true , message:"Comment fetched successfully" , comments});
+        return res.status(200).json({success:true , message:"Comment fetched successfully" , comments});
     } catch (error) {
         return res.status(500).json({success:false , message:"pod marachhis bara?"});
     }

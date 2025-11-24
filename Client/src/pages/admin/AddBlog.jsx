@@ -1,21 +1,59 @@
 import React, { useState , useRef, useEffect } from 'react'
 import {assets, blogCategories} from '../../assets/assets'
 import quill from  'quill'
+import { useAppContext } from '../../../context/AppContext';
+import toast from 'react-hot-toast';
 
 function AddBlog() {
 
   const editorRef = useRef(null);
   const quillref = useRef(null);
 
-  const [image , setImage] = useState(false);
+  const {axios} = useAppContext();
+  const [isAdding , setisAdding] = useState(false);
+
+  const [image , setImage] = useState(null);
   const [title , setTitle] = useState("");
   const [subtitle , setSubtitle] = useState("");
   const [category , setCategory] = useState("Startup");
   const [isPublished , setIsPublished] = useState(false);
 
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e) => {
+    try {
+      e.preventDefault();
+      setisAdding(true);
+
+      const formdata = new FormData();
+      formdata.append('title', title);
+      formdata.append('subtitle', subtitle);
+      formdata.append('description', quillref.current?.root?.innerHTML || '');
+      formdata.append('category', category);
+      formdata.append('isPublished', isPublished);
+      if (image) formdata.append('image', image);
+
+      const { data } = await axios.post('/api/blog/add', formdata, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+
+      if (data && data.success) {
+        toast.success("Blog added successfully");
+        setImage(null);
+        setTitle("");
+        setSubtitle("");
+        setCategory("Startup");
+        setIsPublished(false);
+        quillref.current.root.innerHTML = "";
+      }else{
+        toast.error("Failed to add blog");
+      }
+    } catch (error) {
+      toast.error("Failed to add blog-catch-section");
+    }finally{
+      setisAdding(false);
+    }
   }
 
   const GenerateContent = async ()=>{}
@@ -79,9 +117,9 @@ function AddBlog() {
            onChange={(e)=>setIsPublished(e.target.checked)} />
         </div>
 
-        <button type='submit'
+        <button disabled={isAdding} type='submit'
         className='mt-8 w-40 h-10 bg-primary text-white rounded cursor-pointer text-sm'
-        >Add Blog</button>
+        >{isAdding ? "Adding..." : "Add Blog"}</button>
 
 
       </div>
