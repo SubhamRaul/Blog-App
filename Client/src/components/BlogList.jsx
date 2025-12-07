@@ -3,6 +3,7 @@ import { blog_data, blogCategories } from '../assets/assets'
 import {motion} from "motion/react"
 import Blogcard from './Blogcard';
 import { useAppContext } from '../../context/AppContext';
+import Loader from './Loader';
 
 function BlogList() {
 
@@ -15,7 +16,7 @@ function BlogList() {
     }
 
 
-  return (
+  return blogs ? (
     <div>
       <div className=' flex justify-center gap-4 sm:gap-8 my-10 relative '>
         {
@@ -43,7 +44,7 @@ function BlogList() {
         })}
       </div>
     </div>
-  )
+  ) : <Loader />
 }
 
 export default BlogList
