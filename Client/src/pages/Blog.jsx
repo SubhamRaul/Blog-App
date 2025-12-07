@@ -7,6 +7,7 @@ import moment from 'moment';
 import Loader from '../components/Loader';
 import { useAppContext } from '../../context/AppContext';
 import toast from 'react-hot-toast';
+import html2pdf from 'html2pdf.js';
 
 
 const Blog = () => {
@@ -60,6 +61,50 @@ const Blog = () => {
     }
   }
 
+  const HandleDownloadPDF = async () => {
+    try {
+      toast.success('Generating PDF...');
+      
+      const htmlContent = `
+        <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 100%;">
+          <h1 style="text-align: center; color: #333; margin-bottom: 10px; font-size: 28px;">${data.title}</h1>
+          <h2 style="text-align: center; color: #666; margin-bottom: 20px; font-size: 16px;">${data.subtitle || ''}</h2>
+          <p style="text-align: center; color: #999; margin-bottom: 20px; font-size: 12px;">Published on: ${moment(data.createdAt).format('MMMM Do, YYYY')}</p>
+          ${data.image ? `<img src="${data.image}" alt="Blog Image" style="max-width: 100%; height: auto; display: block; margin: 20px auto; border-radius: 8px;" />` : '<p style="text-align: center; color: #ccc;">No image available</p>'}
+          <div style="line-height: 1.8; color: #333; margin-top: 30px; font-size: 14px;">
+            ${data.description}
+          </div>
+        </div>
+      `;
+
+      const element = document.createElement('div');
+      element.style.backgroundColor = '#ffffff';
+      element.innerHTML = htmlContent;
+      document.body.appendChild(element);
+
+      const options = {
+        margin: 10,
+        filename: `${(data.title || 'blog').replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { 
+          scale: 2, 
+          backgroundColor: '#ffffff',
+          useCORS: true,
+          allowTaint: true,
+          logging: false
+        },
+        jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
+      };
+
+      await html2pdf().set(options).from(element).save();
+      document.body.removeChild(element);
+      toast.success('PDF downloaded!');
+    } catch (error) {
+      toast.error('Failed to generate PDF: ' + error.message);
+      console.error('PDF generation error:', error);
+    }
+  }
+
   useEffect(() => {
     fetchBlog();
     fetchComments();
@@ -83,6 +128,8 @@ const Blog = () => {
         <img src={data.image} alt="" className='rounded-3xl mb-5' />
 
         <div dangerouslySetInnerHTML={{__html:data.description}} className='rich-text max-w-3xl mx-auto'></div>
+
+        <button type='submit' onClick={HandleDownloadPDF} className=' relative left-30 bg-primary text-white py-2 px-4 rounded cursor-pointer'>Download PDF</button>
 
         {/* Comments Section */}
         <div className='mt-14 mb-10 max-w-3xl mx-auto'>
