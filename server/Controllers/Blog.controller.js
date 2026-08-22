@@ -2,6 +2,7 @@ import { Blog } from "../Models/Blog.model.js";
 import ImageKit from "@imagekit/nodejs";
 import { Comment } from "../Models/Comment.model.js";
 import main from "../configs/gemini.js";
+import fs from "node:fs";
 
 const client = new ImageKit({
   privateKey: process.env["IMAGEKIT_PRIVATE_KEY"],

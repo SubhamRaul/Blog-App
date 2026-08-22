@@ -65,7 +65,7 @@ function AddBlog() {
     }
     try {
       setLoading(true);
-      const {data} = await axios.post("/api/blog/generate" , {prompt:title});
+      const {data} = await axios.post("/api/blog/generate" , {prompt: `${title}\n${subtitle}`});
       if(data.success){
         quillref.current.root.innerHTML = parse(data.content);
       }else{
